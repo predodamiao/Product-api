@@ -1,34 +1,69 @@
 using Domain.Models;
+using Infrastructure.Database.Context;
 using Infrastructure.Dtos;
 using Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Infrastructure.Repositories
 {
     internal class ProductRepository : IProductRepository
     {
-        public Task<Product> Create(Product productToCreate)
+        ApplicationDbContext DbContext { get; set; }
+
+        public ProductRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            DbContext = context;
         }
 
-        public Task Delete(int id)
+        public async Task<Product> Create(Product productToCreate)
         {
-            throw new NotImplementedException();
+            await DbContext.Products.AddAsync(productToCreate);
+            await DbContext.SaveChangesAsync();
+
+            return productToCreate;
         }
 
-        public Task<IEnumerable<Product>> FindAll(FindProductsDto options)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var productToDelete = await DbContext.Products.FindAsync(id);
+
+            if (productToDelete == null) return;
+
+            DbContext.Products.Remove(productToDelete);
+            await DbContext.SaveChangesAsync();
         }
 
-        public Task<Product> GetById(int id)
+        public async Task<List<Product>> FindAll(FindProductsDto options)
         {
-            throw new NotImplementedException();
+            IQueryable<Product> query = DbContext.Products;
+
+            if (!string.IsNullOrEmpty(options.NameToFind))
+            {
+                query = query.Where(p => EF.Functions.ILike(p.Name, $"%{options.NameToFind}%"));
+            }
+
+            if (!string.IsNullOrEmpty(options.PropertyToOrderBy))
+            {
+                query.OrderBy(options.PropertyToOrderBy);
+            }
+
+            query = query.Skip((int)options.Pagination.Skip).Take((int)options.Pagination.Take);
+
+            return await query.ToListAsync();
         }
 
-        public Task<Product> Update(Product productToUpdate)
+        public async Task<Product?> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await DbContext.Products.FindAsync(id);
+        }
+
+        public async Task<Product> Update(Product productToUpdate)
+        {
+            await DbContext.Products.AddAsync(productToUpdate);
+            await DbContext.SaveChangesAsync();
+
+            return productToUpdate;
         }
     }
 }
