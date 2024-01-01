@@ -50,12 +50,12 @@ namespace Service.Services
             return await _productRepository.Update(product);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            if(_productRepository.GetById(id) == null)
+            if(await _productRepository.GetById(id) == null)
                 throw new ArgumentException("Product not found");
 
-            return _productRepository.Delete(id);
+            await _productRepository.Delete(id);
         }
 
         public async Task<Product> GetById(int id)
