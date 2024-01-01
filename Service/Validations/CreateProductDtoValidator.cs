@@ -14,20 +14,20 @@ namespace Service.Services.Validations
         public CreateProductDtoValidator()
         {
             RuleFor(product => product.Name)
-                .NotEmpty().WithMessage("Name is required")
-                .MaximumLength(100).WithMessage("Name must be less than or equal to 100 characters");
+                .NotEmpty().WithMessage($"{nameof(CreateProductDto.Name)} is required")
+                .MaximumLength(100).WithMessage($"{nameof(CreateProductDto.Name)} must be less than or equal to 100 characters");
 
             RuleFor(product => product.Description)
-                .NotEmpty().WithMessage("Description is required")
-                .MaximumLength(500).WithMessage("Description must be less than or equal to 500 characters");
+                .NotEmpty().WithMessage($"{nameof(CreateProductDto.Description)} is required")
+                .MaximumLength(500).WithMessage($"{nameof(CreateProductDto.Description)} must be less than or equal to 500 characters");
 
             RuleFor(product => product.AvailableQuantity)
-                .NotEmpty().WithMessage("AvailableQuantity is required")
-                .GreaterThanOrEqualTo(0).WithMessage("AvailableQuantity must be greater than or equal to 0");
+                .NotEmpty().WithMessage($"{nameof(CreateProductDto.AvailableQuantity)} is required")
+                .GreaterThanOrEqualTo(0).WithMessage($"{nameof(CreateProductDto.AvailableQuantity)} must be greater than or equal to 0");
 
             RuleFor(product => product.Price)
-                .NotEmpty().WithMessage("Price is required")
-                .GreaterThanOrEqualTo(0).WithMessage("Price must be greater than or equal to 0");
+                .NotEmpty().WithMessage($"{nameof(CreateProductDto.Price)} is required")
+                .GreaterThanOrEqualTo(0).WithMessage($"{nameof(CreateProductDto.Price)} must be greater than or equal to 0");
         }   
     }
 }
