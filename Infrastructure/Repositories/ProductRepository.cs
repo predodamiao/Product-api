@@ -48,7 +48,7 @@ namespace Infrastructure.Repositories
                 query.OrderBy(options.PropertyToOrderBy);
             }
 
-            query = query.Skip((int)options.Pagination.Skip).Take((int)options.Pagination.Take);
+            query = query.Skip(options.Pagination.PageNumber * options.Pagination.PageSize).Take(options.Pagination.PageSize);
 
             return await query.ToListAsync();
         }
