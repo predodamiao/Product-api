@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Infrastructure.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Service.Dtos;
@@ -5,8 +6,9 @@ using Service.Services.Interfaces;
 
 namespace Api.V1.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -17,6 +19,7 @@ namespace Api.V1.Controllers
         }
 
         [HttpGet]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> Get(int pageNumber, int pageSize, string? nameToFind, string? propertyToOrderBy)
         {
             var result = await _productService.FindAll(new FindProductsDto()
@@ -34,6 +37,7 @@ namespace Api.V1.Controllers
         }
 
         [HttpGet("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> Get(int id)
         {
             var product = await _productService.GetById(id);
@@ -41,6 +45,7 @@ namespace Api.V1.Controllers
         }
 
         [HttpPost]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> Post([FromBody] CreateProductDto productToCreate)
         {
             var createdProduct = await _productService.Create(productToCreate);
@@ -48,6 +53,7 @@ namespace Api.V1.Controllers
         }
 
         [HttpPut("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateProductDto productToUpdate)
         {
             var updatedProduct = await _productService.Update(id, productToUpdate);
@@ -55,6 +61,7 @@ namespace Api.V1.Controllers
         }
 
         [HttpDelete("{id}")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> Delete(int id)
         {
             await _productService.Delete(id);
