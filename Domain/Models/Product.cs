@@ -8,6 +8,7 @@ namespace Domain.Models
         public long AvailableQuantity { get; set; }
         public Decimal Price { get; set; }
 
+        public Product() { }
 
         public Product(string name, string description, long availableQuantity, decimal price)
         {
