@@ -74,6 +74,8 @@ namespace Service.Services
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
+            options.PropertyToOrderBy ??= nameof(Product.Id);
+
             return await _productRepository.FindAll(options);
         }
     }
