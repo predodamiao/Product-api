@@ -16,6 +16,11 @@ namespace Service.IoC
             services.AddScoped<IValidator<UpdateProductDto>, UpdateProductDtoValidator>();
             services.AddScoped<IValidator<FindProductsDto>, FindProductsDtoValidator>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
             services.AddScoped<IProductService, ProductService>();
 
             return services;
