@@ -10,8 +10,16 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.IoC
 {
+    /// <summary>
+    /// Extension to add all the dependencies of the Infrastructure project
+    /// </summary>
     public static class InfrastructureIoC
     {
+        /// <summary>
+        /// Add all the repositories to IoC
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IProductRepository, ProductRepository>();
@@ -19,6 +27,11 @@ namespace Infrastructure.IoC
             return services;
         }
 
+        /// <summary>
+        /// Add the Serilog logging to IoC
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddSerilogLogging(this IServiceCollection services)
         {
             Log.Logger = new LoggerConfiguration()
@@ -39,6 +52,12 @@ namespace Infrastructure.IoC
             return services;
         }
 
+        /// <summary>
+        /// Add the database context to IoC
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>

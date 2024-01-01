@@ -7,15 +7,21 @@ using System.Linq.Dynamic.Core;
 
 namespace Infrastructure.Repositories
 {
-    internal class ProductRepository : IProductRepository
+    /// <inheritdoc/>
+    public class ProductRepository : IProductRepository
     {
         ApplicationDbContext DbContext { get; set; }
 
+        /// <summary>
+        /// Product Repository constructor
+        /// </summary>
+        /// <param name="context"></param>
         public ProductRepository(ApplicationDbContext context)
         {
             DbContext = context;
         }
 
+        /// <inheritdoc/>
         public async Task<Product> Create(Product productToCreate)
         {
             await DbContext.Products.AddAsync(productToCreate);
@@ -24,6 +30,7 @@ namespace Infrastructure.Repositories
             return productToCreate;
         }
 
+        /// <inheritdoc/>
         public async Task Delete(int id)
         {
             var productToDelete = await DbContext.Products.FindAsync(id);
@@ -34,6 +41,7 @@ namespace Infrastructure.Repositories
             await DbContext.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<List<Product>> FindAll(FindProductsDto options)
         {
             IQueryable<Product> query = DbContext.Products;
@@ -54,11 +62,13 @@ namespace Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<Product?> GetById(int id)
         {
             return await DbContext.Products.FindAsync(id);
         }
 
+        /// <inheritdoc/>
         public async Task<Product> Update(Product productToUpdate)
         {
             DbContext.Products.Update(productToUpdate);

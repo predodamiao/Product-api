@@ -7,6 +7,13 @@ using Service.Services.Interfaces;
 
 namespace Service.Services
 {
+    /// <summary>
+    /// Product Service
+    /// </summary>
+    /// <param name="createProductDtoValidator"></param>
+    /// <param name="updateProductDtoValidator"></param>
+    /// <param name="findProductsDtoValidator"></param>
+    /// <param name="productRepository"></param>
     public class ProductService(
             IValidator<CreateProductDto> createProductDtoValidator,
             IValidator<UpdateProductDto> updateProductDtoValidator,
@@ -19,6 +26,7 @@ namespace Service.Services
         private readonly IValidator<FindProductsDto> _findProductsDtoValidator = findProductsDtoValidator;
         private readonly IProductRepository _productRepository = productRepository;
 
+        /// <inheritdoc/>
         public Task<Product> Create(CreateProductDto productToCreate)
         {
             var validationResult = _createProductDtoValidator.Validate(productToCreate);
@@ -30,6 +38,7 @@ namespace Service.Services
             return _productRepository.Create(newProduct);
         }
 
+        /// <inheritdoc/>
         public async Task<Product> Update(int id, UpdateProductDto productToUpdate)
         {
             var validationResult = _updateProductDtoValidator.Validate(productToUpdate);
@@ -50,6 +59,7 @@ namespace Service.Services
             return await _productRepository.Update(product);
         }
 
+        /// <inheritdoc/>
         public async Task Delete(int id)
         {
             if(await _productRepository.GetById(id) == null)
@@ -58,6 +68,7 @@ namespace Service.Services
             await _productRepository.Delete(id);
         }
 
+        /// <inheritdoc/>
         public async Task<Product> GetById(int id)
         {
             var product = await _productRepository.GetById(id);
@@ -68,6 +79,7 @@ namespace Service.Services
             return product;
         }
 
+        /// <inheritdoc/>
         public async Task<List<Product>> FindAll(FindProductsDto options)
         {
             var validationResult = _findProductsDtoValidator.Validate(options);

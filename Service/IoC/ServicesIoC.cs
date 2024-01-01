@@ -8,8 +8,16 @@ using Service.Services.Validations;
 
 namespace Service.IoC
 {
+    /// <summary>
+    /// Services IoC
+    /// </summary>
     public static class ServicesIoC
     {
+        /// <summary>
+        /// Add validators to IoC
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
             services.AddScoped<IValidator<CreateProductDto>, CreateProductDtoValidator>();
@@ -19,6 +27,11 @@ namespace Service.IoC
             return services;
         }
 
+        /// <summary>
+        /// Add services to IoC
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IProductService, ProductService>();

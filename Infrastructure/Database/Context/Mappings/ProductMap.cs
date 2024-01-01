@@ -4,8 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Context.Mappings
 {
+    /// <summary>
+    ///  Map of entity product
+    /// </summary>
     public class ProductMap : IEntityTypeConfiguration<Product>
     {
+        /// <summary>
+        /// Configure entity product
+        /// </summary>
+        /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.ToTable("Product");

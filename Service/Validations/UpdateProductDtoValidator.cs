@@ -3,8 +3,14 @@ using Service.Dtos;
 
 namespace Service.Services.Validations
 {
+    /// <summary>
+    /// Update Product Dto Validation with FluentValidation
+    /// </summary>
     public class UpdateProductDtoValidator: AbstractValidator<UpdateProductDto>
     {
+        /// <summary>
+        /// Execute validations on UpdateProductDto
+        /// </summary>
         public UpdateProductDtoValidator()
         {
             RuleFor(product => product.Name)

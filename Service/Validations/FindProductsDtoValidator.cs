@@ -4,15 +4,21 @@ using Infrastructure.Dtos;
 
 namespace Service.Services.Validations
 {
+    /// <summary>
+    /// Find Products Dto Validation with FluentValidation
+    /// </summary>
     public class FindProductsDtoValidator : AbstractValidator<FindProductsDto>
     {
+        /// <summary>
+        /// Execute Validations on FindProductsDto
+        /// </summary>
         public FindProductsDtoValidator()
         {
             RuleFor(product => product.NameToFind)
                 .MaximumLength(100).WithMessage("NameToFind must be less than or equal to 100 characters");
 
             RuleFor(product => product.PropertyToOrderBy)
-                .Must((propertyToOrderBy) => propertyToOrderBy == null || isPropertyFromProduct(propertyToOrderBy));
+                .Must((propertyToOrderBy) => propertyToOrderBy == null || IsPropertyFromProduct(propertyToOrderBy));
 
             RuleFor(product => product.Pagination)
                 .NotNull().WithMessage("Pagination is required");
@@ -26,7 +32,7 @@ namespace Service.Services.Validations
         }
 
 
-        private bool isPropertyFromProduct(string? propertyName)
+        private static bool IsPropertyFromProduct(string? propertyName)
         {
             var productProperties = typeof(Product).GetProperties().Select(property => property.Name);
             return productProperties.Contains(propertyName);
