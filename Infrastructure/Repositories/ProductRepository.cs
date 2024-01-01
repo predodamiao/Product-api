@@ -45,10 +45,11 @@ namespace Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(options.PropertyToOrderBy))
             {
-                query.OrderBy(options.PropertyToOrderBy);
+                query = query.OrderBy(options.PropertyToOrderBy);
             }
 
-            query = query.Skip(options.Pagination.PageNumber * options.Pagination.PageSize).Take(options.Pagination.PageSize);
+            var skip = (options.Pagination.PageNumber - 1) * options.Pagination.PageSize;
+            query = query.Skip(skip).Take(options.Pagination.PageSize);
 
             return await query.ToListAsync();
         }
