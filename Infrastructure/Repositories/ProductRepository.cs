@@ -60,7 +60,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Product> Update(Product productToUpdate)
         {
-            await DbContext.Products.AddAsync(productToUpdate);
+            DbContext.Products.Update(productToUpdate);
             await DbContext.SaveChangesAsync();
 
             return productToUpdate;
