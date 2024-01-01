@@ -41,16 +41,13 @@ namespace Service.Services
             if (product == null)
                 throw new ArgumentException("Product not found");
 
-            var updatingProduct = new Product()
-            {
-                Id = product.Id,
-                Name = productToUpdate.Name ?? product.Name,
-                Description = productToUpdate.Description ?? product.Description,
-                AvailableQuantity = productToUpdate.AvailableQuantity ?? product.AvailableQuantity,
-                Price = productToUpdate.Price ?? product.Price
-            };
+            product.Id = product.Id;
+            product.Name = productToUpdate.Name ?? product.Name;
+            product.Description = productToUpdate.Description ?? product.Description;
+            product.AvailableQuantity = productToUpdate.AvailableQuantity ?? product.AvailableQuantity;
+            product.Price = productToUpdate.Price ?? product.Price;
 
-            return await _productRepository.Update(updatingProduct);
+            return await _productRepository.Update(product);
         }
 
         public Task Delete(int id)
