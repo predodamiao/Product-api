@@ -1,9 +1,11 @@
+using Api.Dtos;
 using Asp.Versioning;
 using Domain.Models;
 using Infrastructure.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Service.Dtos;
 using Service.Services.Interfaces;
+using System.Net;
 
 namespace Api.V1.Controllers
 {
@@ -53,7 +55,10 @@ namespace Api.V1.Controllers
                 }
             });
 
-            return Ok(result);
+            if (result.IsFailed)
+                return BadRequest(new ErrorResponseDto(HttpStatusCode.BadRequest, result.Errors));
+
+            return Ok(result.Value);
         }
 
         /// <summary>
@@ -68,8 +73,11 @@ namespace Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(int id)
         {
-            var product = await _productService.GetById(id);
-            return Ok(product);
+            var result = await _productService.GetById(id);
+            if (result.IsFailed)
+                return BadRequest(new ErrorResponseDto(HttpStatusCode.BadRequest, result.Errors));
+
+            return Ok(result.Value);
         }
 
         /// <summary>
@@ -84,8 +92,11 @@ namespace Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody] CreateProductDto productToCreate)
         {
-            var createdProduct = await _productService.Create(productToCreate);
-            return CreatedAtAction(nameof(Post), new { id = createdProduct.Id }, createdProduct);
+            var result = await _productService.Create(productToCreate);
+            if (result.IsFailed)
+                return BadRequest(new ErrorResponseDto(HttpStatusCode.BadRequest, result.Errors));
+
+            return CreatedAtAction(nameof(Post), new { id = result.Value.Id }, result.Value);
         }
 
         /// <summary>
@@ -101,8 +112,11 @@ namespace Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateProductDto productToUpdate)
         {
-            var updatedProduct = await _productService.Update(id, productToUpdate);
-            return Ok(updatedProduct);
+            var result = await _productService.Update(id, productToUpdate);
+            if (result.IsFailed)
+                return BadRequest(new ErrorResponseDto(HttpStatusCode.BadRequest, result.Errors));
+
+            return Ok(result.Value);
         }
 
         /// <summary>
@@ -117,7 +131,10 @@ namespace Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(int id)
         {
-            await _productService.Delete(id);
+            var result = await _productService.Delete(id);
+            if (result.IsFailed)
+                return BadRequest(new ErrorResponseDto(HttpStatusCode.BadRequest, result.Errors));
+
             return NoContent();
         }
     }

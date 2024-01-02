@@ -1,8 +1,10 @@
 using Domain.Models;
+using FluentResults;
 using FluentValidation;
 using Infrastructure.Dtos;
 using Infrastructure.Repositories.Interfaces;
 using Service.Dtos;
+using Service.Extensions;
 using Service.Services.Interfaces;
 
 namespace Service.Services
@@ -27,68 +29,107 @@ namespace Service.Services
         private readonly IProductRepository _productRepository = productRepository;
 
         /// <inheritdoc/>
-        public Task<Product> Create(CreateProductDto productToCreate)
+        public async Task<Result<Product>> Create(CreateProductDto productToCreate)
         {
-            var validationResult = _createProductDtoValidator.Validate(productToCreate);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+            try
+            {
+                var validationResult = _createProductDtoValidator.Validate(productToCreate);
+                if (!validationResult.IsValid)
+                    return validationResult.GetFluentErrors();
 
-            var newProduct = new Product(productToCreate.Name, productToCreate.Description, productToCreate.AvailableQuantity, productToCreate.Price);
+                var newProduct = new Product(productToCreate.Name, productToCreate.Description, productToCreate.AvailableQuantity, productToCreate.Price);
 
-            return _productRepository.Create(newProduct);
+                var createdProduct = await _productRepository.Create(newProduct);
+                return Result.Ok(createdProduct);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
 
         /// <inheritdoc/>
-        public async Task<Product> Update(int id, UpdateProductDto productToUpdate)
+        public async Task<Result<Product>> Update(int id, UpdateProductDto productToUpdate)
         {
-            var validationResult = _updateProductDtoValidator.Validate(productToUpdate);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+            try
+            {
+                var validationResult = _updateProductDtoValidator.Validate(productToUpdate);
+                if (!validationResult.IsValid)
+                    return validationResult.GetFluentErrors();
 
-            var product = await _productRepository.GetById(id);
+                var product = await _productRepository.GetById(id);
 
-            if (product == null)
-                throw new ArgumentException("Product not found");
+                if (product == null)
+                    return Result.Fail("Product not found");
 
-            product.Id = product.Id;
-            product.Name = productToUpdate.Name ?? product.Name;
-            product.Description = productToUpdate.Description ?? product.Description;
-            product.AvailableQuantity = productToUpdate.AvailableQuantity ?? product.AvailableQuantity;
-            product.Price = productToUpdate.Price ?? product.Price;
+                product.Id = product.Id;
+                product.Name = productToUpdate.Name ?? product.Name;
+                product.Description = productToUpdate.Description ?? product.Description;
+                product.AvailableQuantity = productToUpdate.AvailableQuantity ?? product.AvailableQuantity;
+                product.Price = productToUpdate.Price ?? product.Price;
 
-            return await _productRepository.Update(product);
+                var updatedProduct =  await _productRepository.Update(product);
+                return Result.Ok(updatedProduct);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
 
         /// <inheritdoc/>
-        public async Task Delete(int id)
+        public async Task<Result> Delete(int id)
         {
-            if(await _productRepository.GetById(id) == null)
-                throw new ArgumentException("Product not found");
+            try
+            {
+                if (await _productRepository.GetById(id) == null)
+                    return Result.Fail("Product not found");
 
-            await _productRepository.Delete(id);
+                await _productRepository.Delete(id);
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
 
         /// <inheritdoc/>
-        public async Task<Product> GetById(int id)
+        public async Task<Result<Product>> GetById(int id)
         {
-            var product = await _productRepository.GetById(id);
+            try
+            {
+                var product = await _productRepository.GetById(id);
 
-            if(product == null)
-                throw new ArgumentException("Product not found");
+                if (product == null)
+                    return Result.Fail("Product not found");
 
-            return product;
+                return Result.Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
 
         /// <inheritdoc/>
-        public async Task<List<Product>> FindAll(FindProductsDto options)
+        public async Task<Result<List<Product>>> FindAll(FindProductsDto options)
         {
-            var validationResult = _findProductsDtoValidator.Validate(options);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+            try
+            {
+                var validationResult = _findProductsDtoValidator.Validate(options);
+                if (!validationResult.IsValid)
+                    return validationResult.GetFluentErrors();
 
-            options.PropertyToOrderBy ??= nameof(Product.Id);
+                options.PropertyToOrderBy ??= nameof(Product.Id);
 
-            return await _productRepository.FindAll(options);
+                var products = await _productRepository.FindAll(options);
+                return Result.Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
     }
 }
