@@ -3,6 +3,7 @@ using FluentResults;
 using FluentValidation;
 using Infrastructure.Dtos;
 using Infrastructure.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
 using Service.Dtos;
 using Service.Extensions;
 using Service.Services.Interfaces;
@@ -12,17 +13,20 @@ namespace Service.Services
     /// <summary>
     /// Product Service
     /// </summary>
+    /// <param name="logger"></param>
     /// <param name="createProductDtoValidator"></param>
     /// <param name="updateProductDtoValidator"></param>
     /// <param name="findProductsDtoValidator"></param>
     /// <param name="productRepository"></param>
     public class ProductService(
+            ILogger<ProductService> logger,
             IValidator<CreateProductDto> createProductDtoValidator,
             IValidator<UpdateProductDto> updateProductDtoValidator,
             IValidator<FindProductsDto> findProductsDtoValidator,
             IProductRepository productRepository
             ) : IProductService
     {
+        private readonly ILogger<ProductService> _logger = logger;
         private readonly IValidator<CreateProductDto> _createProductDtoValidator = createProductDtoValidator;
         private readonly IValidator<UpdateProductDto> _updateProductDtoValidator = updateProductDtoValidator;
         private readonly IValidator<FindProductsDto> _findProductsDtoValidator = findProductsDtoValidator;
@@ -44,6 +48,7 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error creating product");
                 return Result.Fail(ex.Message);
             }
         }
@@ -73,6 +78,7 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error updating product | Id: {productId}", id);
                 return Result.Fail(ex.Message);
             }
         }
@@ -90,6 +96,7 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error deleting product | Id: {productId}", id);
                 return Result.Fail(ex.Message);
             }
         }
@@ -108,6 +115,7 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error retrieving product | Id: {productId}", id);
                 return Result.Fail(ex.Message);
             }
         }
@@ -128,6 +136,7 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error retrieving products | Options: {@findAllOptions}", options);
                 return Result.Fail(ex.Message);
             }
         }
