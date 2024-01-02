@@ -18,12 +18,14 @@ namespace Service.Services
     /// <param name="updateProductDtoValidator"></param>
     /// <param name="findProductsDtoValidator"></param>
     /// <param name="productRepository"></param>
+    /// <param name="cacheService"></param>
     public class ProductService(
             ILogger<ProductService> logger,
             IValidator<CreateProductDto> createProductDtoValidator,
             IValidator<UpdateProductDto> updateProductDtoValidator,
             IValidator<FindProductsDto> findProductsDtoValidator,
-            IProductRepository productRepository
+            IProductRepository productRepository,
+            ICacheService cacheService
             ) : IProductService
     {
         private readonly ILogger<ProductService> _logger = logger;
@@ -31,6 +33,8 @@ namespace Service.Services
         private readonly IValidator<UpdateProductDto> _updateProductDtoValidator = updateProductDtoValidator;
         private readonly IValidator<FindProductsDto> _findProductsDtoValidator = findProductsDtoValidator;
         private readonly IProductRepository _productRepository = productRepository;
+        private readonly ICacheService _cacheService = cacheService;
+        private const string CACHE_PREFIX = "Product_";
 
         /// <inheritdoc/>
         public async Task<Result<Product>> Create(CreateProductDto productToCreate)
@@ -44,6 +48,8 @@ namespace Service.Services
                 var newProduct = new Product(productToCreate.Name, productToCreate.Description, productToCreate.AvailableQuantity, productToCreate.Price);
 
                 var createdProduct = await _productRepository.Create(newProduct);
+                _cacheService.Set($"{CACHE_PREFIX}{createdProduct.Id}", createdProduct);
+
                 return Result.Ok(createdProduct);
             }
             catch (Exception ex)
@@ -74,6 +80,8 @@ namespace Service.Services
                 product.Price = productToUpdate.Price ?? product.Price;
 
                 var updatedProduct =  await _productRepository.Update(product);
+                _cacheService.Set($"{CACHE_PREFIX}{id}", updatedProduct);
+
                 return Result.Ok(updatedProduct);
             }
             catch (Exception ex)
@@ -92,6 +100,7 @@ namespace Service.Services
                     return Result.Fail("Product not found");
 
                 await _productRepository.Delete(id);
+                _cacheService.Remove($"{CACHE_PREFIX}{id}");
                 return Result.Ok();
             }
             catch (Exception ex)
@@ -106,6 +115,10 @@ namespace Service.Services
         {
             try
             {
+                var productFromCache = _cacheService.Get<Product>($"{CACHE_PREFIX}{id}");
+                if (productFromCache != null)
+                    return Result.Ok(productFromCache);
+
                 var product = await _productRepository.GetById(id);
 
                 if (product == null)

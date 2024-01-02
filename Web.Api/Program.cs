@@ -44,6 +44,7 @@ builder.Services.AddRepositories();
 builder.Services.AddSerilogLogging();
 builder.Services.AddValidators();
 builder.Services.AddServices();
+builder.Services.AddCacheService();
 builder.Services.AddDatabaseContext(builder.Configuration);
 
 var app = builder.Build();

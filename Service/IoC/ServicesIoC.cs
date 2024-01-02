@@ -38,5 +38,19 @@ namespace Service.IoC
 
             return services;
         }
+
+        /// <summary>
+        /// Add memory cache service to IoC
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddCacheService(this IServiceCollection services)
+        {
+            services.AddMemoryCache();
+
+            services.AddScoped<ICacheService, CacheService>();
+
+            return services;
+        }
     }
 }
