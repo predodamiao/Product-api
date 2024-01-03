@@ -68,3 +68,8 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
+
+/// <summary>
+/// Public class to run the application
+/// </summary>
+public partial class Program { }
