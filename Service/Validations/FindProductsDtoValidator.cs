@@ -26,12 +26,17 @@ namespace Service.Services.Validations
             RuleFor(product => product.Pagination)
                 .NotNull().WithMessage($"{nameof(FindProductsDto.Pagination)} is required");
 
-            RuleFor(product => product.Pagination.PageNumber)
-                .GreaterThanOrEqualTo(1).WithMessage($"{nameof(FindProductsDto.Pagination.PageNumber)} must be greater than or equal to 1");
+            When(product => product.Pagination != null, () =>
+            {
 
-            RuleFor(product => product.Pagination.PageSize)
-                .GreaterThanOrEqualTo(1).WithMessage($"{nameof(FindProductsDto.Pagination.PageSize)} must be greater than or equal to 1")
-                .LessThanOrEqualTo(200).WithMessage($"{nameof(FindProductsDto.Pagination.PageSize)} must be less than or equal to 200");
+                RuleFor(product => product.Pagination.PageNumber)
+                    .GreaterThanOrEqualTo(1).WithMessage($"{nameof(FindProductsDto.Pagination.PageNumber)} must be greater than or equal to 1");
+
+                RuleFor(product => product.Pagination.PageSize)
+                    .GreaterThanOrEqualTo(1).WithMessage($"{nameof(FindProductsDto.Pagination.PageSize)} must be greater than or equal to 1")
+                    .LessThanOrEqualTo(200).WithMessage($"{nameof(FindProductsDto.Pagination.PageSize)} must be less than or equal to 200");
+            });
+
         }
 
         private bool IsPropertyFromProduct(string? propertyName)

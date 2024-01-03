@@ -14,7 +14,7 @@ namespace Infrastructure.Dtos
 
         /// <summary>Constructor</summary>
         public FindProductsDto() {
-            Pagination = new PaginationDto();
+            Pagination = new PaginationDto(1, 10);
         }
     }
 }

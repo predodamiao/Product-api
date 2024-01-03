@@ -124,6 +124,8 @@ namespace Service.Services
                 if (product == null)
                     return Result.Fail("Product not found");
 
+                _cacheService.Set($"{CACHE_PREFIX}{id}", product);
+
                 return Result.Ok(product);
             }
             catch (Exception ex)

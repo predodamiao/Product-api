@@ -24,5 +24,15 @@ namespace Domain.Models
             AvailableQuantity = availableQuantity;
             Price = price;
         }
+
+        /// <summary>Product model constructor </summary>
+        public Product(int id, string name, string description, long availableQuantity, decimal price)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            AvailableQuantity = availableQuantity;
+            Price = price;
+        }
     }
 }

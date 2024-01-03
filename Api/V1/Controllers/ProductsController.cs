@@ -48,11 +48,7 @@ namespace Api.V1.Controllers
             {
                 NameToFind = nameToFind,
                 PropertyToOrderBy = propertyToOrderBy,
-                Pagination = new PaginationDto()
-                {
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
-                }
+                Pagination = new PaginationDto(pageNumber, pageSize)
             });
 
             if (result.IsFailed)

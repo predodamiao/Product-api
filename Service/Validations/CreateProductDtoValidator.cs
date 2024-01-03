@@ -22,11 +22,9 @@ namespace Service.Services.Validations
                 .MaximumLength(500).WithMessage($"{nameof(CreateProductDto.Description)} must be less than or equal to 500 characters");
 
             RuleFor(product => product.AvailableQuantity)
-                .NotEmpty().WithMessage($"{nameof(CreateProductDto.AvailableQuantity)} is required")
                 .GreaterThanOrEqualTo(0).WithMessage($"{nameof(CreateProductDto.AvailableQuantity)} must be greater than or equal to 0");
 
             RuleFor(product => product.Price)
-                .NotEmpty().WithMessage($"{nameof(CreateProductDto.Price)} is required")
                 .GreaterThanOrEqualTo(0).WithMessage($"{nameof(CreateProductDto.Price)} must be greater than or equal to 0");
         }   
     }

@@ -9,5 +9,16 @@ namespace Infrastructure.Dtos
         public int PageNumber { get; set; }
         /// <summary>Number of items per page</summary>
         public int PageSize { get; set; }
+
+        /// <summary>
+        /// Pagination DTO constructor
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        public PaginationDto(int pageNumber, int pageSize)
+        {
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+        }
     }
 }
