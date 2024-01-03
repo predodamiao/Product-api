@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240101185051_CreateProductTable")]
+    [Migration("20240103144329_CreateProductTable")]
     partial class CreateProductTable
     {
         /// <inheritdoc />
